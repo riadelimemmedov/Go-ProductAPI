@@ -49,3 +49,6 @@ winpty docker exec -it postgres-test psql -U postgres -d productapp -c "
 "
 sleep 3
 echo "Product table created successfully"
+
+# docker exec -it postgres-test psql -U postgres -d productapp -c "SELECT * FROM product"
+# docker exec -it postgres-test psql -U postgres -d productapp -c "TRUNCATE product RESTART IDENTITY"

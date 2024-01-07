@@ -17,6 +17,7 @@ var productRepository persistence.IProductRepository
 var dbPool *pgxpool.Pool
 var ctx context.Context
 
+// !TestMain
 func TestMain(m *testing.M) {
 	ctx = context.Background()
 
@@ -45,6 +46,7 @@ func clear(ctx context.Context, dbPool *pgxpool.Pool) {
 	TruncateTestData(ctx, dbPool)
 }
 
+// !TestGetAllProducts
 func TestGetAllProducts(t *testing.T) {
 	setup(ctx, dbPool)
 
@@ -85,5 +87,70 @@ func TestGetAllProducts(t *testing.T) {
 		assert.Equal(t, expectedProducts, actualProducts)
 	})
 	fmt.Println("TestGetAllProducts")
+	clear(ctx, dbPool)
+}
+
+// !TestGetAllProductsByStore
+func TestGetAllProductsByStore(t *testing.T) {
+	setup(ctx, dbPool)
+
+	expectedProducts := []domain.Product{
+		{
+			Id:       1,
+			Name:     "AirFryer",
+			Price:    3000.0,
+			Discount: 22.0,
+			Store:    "ABC TECH",
+		},
+		{
+			Id:       2,
+			Name:     "Ütü",
+			Price:    1500.0,
+			Discount: 10.0,
+			Store:    "ABC TECH",
+		},
+		{
+			Id:       3,
+			Name:     "Çamaşır Makinesi",
+			Price:    10000.0,
+			Discount: 15.0,
+			Store:    "ABC TECH",
+		},
+	}
+
+	t.Run("GetAllProductsByStore", func(t *testing.T) {
+		actualProducts := productRepository.GetAllProductsByStore("ABC TECH")
+		assert.Equal(t, 3, len(actualProducts))
+		assert.Equal(t, expectedProducts, actualProducts)
+	})
+
+	fmt.Println("TestGetAllProductsByStore")
+	clear(ctx, dbPool)
+
+}
+
+// !TestAddProduct
+func TestAddProduct(t *testing.T) {
+	expectedProducts := []domain.Product{
+		{
+			Id:       1,
+			Name:     "Kupa",
+			Price:    100.0,
+			Discount: 0.0,
+			Store:    "Kırtasiye Merkezi",
+		},
+	}
+	newProduct := domain.Product{
+		Name:     "Kupa",
+		Price:    100.0,
+		Discount: 0.0,
+		Store:    "Kırtasiye Merkezi",
+	}
+	t.Run("AddProduct", func(t *testing.T) {
+		productRepository.AddProduct(newProduct)
+		actualProducts := productRepository.GetAllProducts()
+		assert.Equal(t, 1, len(actualProducts))
+		assert.Equal(t, expectedProducts, actualProducts)
+	})
 	clear(ctx, dbPool)
 }
