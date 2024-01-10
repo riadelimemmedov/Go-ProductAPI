@@ -52,3 +52,4 @@ echo "Product table created successfully"
 
 # docker exec -it postgres-test psql -U postgres -d productapp -c "SELECT * FROM product"
 # docker exec -it postgres-test psql -U postgres -d productapp -c "TRUNCATE product RESTART IDENTITY"
+# docker ps --filter "status=exited"
