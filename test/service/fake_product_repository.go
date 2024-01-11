@@ -32,7 +32,7 @@ func (fakeRepository *FakeProductRepository) AddProduct(product domain.Product) 
 		Id:       int64(len(fakeRepository.products)) + 1,
 		Name:     product.Name,
 		Price:    product.Price,
-		Discount: product.Price,
+		Discount: product.Discount,
 		Store:    product.Store,
 	})
 	return nil
